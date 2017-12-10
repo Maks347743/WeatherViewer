@@ -3,13 +3,15 @@ package com.geek.maksim.potapov.weatherviewer;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import org.json.JSONArray;
@@ -24,49 +26,48 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class ListWeatherFragment extends Fragment {
     //список объектов Weather с прогнозом погоды
     private List<Weather> mWeatherList = new ArrayList<>();
     //адаптер связывает объект Weather и элемент RecyclerView
     private WeatherAdapter mWeatherAdapter;
     private RecyclerView mWeatherRecyclerView;
+    //ссылка на заполняемый из фрагмента view
+    private View mView;
 
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        mWeatherRecyclerView = findViewById(R.id.weatherRecyclerView);
-        mWeatherAdapter = new WeatherAdapter(this, mWeatherList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mView = inflater.inflate(R.layout.fragment_list_weather, container, false);
+        mWeatherRecyclerView = mView.findViewById(R.id.weatherRecyclerView);
+        mWeatherAdapter = new WeatherAdapter(getActivity(), mWeatherList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mWeatherRecyclerView.setLayoutManager(layoutManager);
         mWeatherRecyclerView.setAdapter(mWeatherAdapter);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = mView.findViewById(R.id.fab);
         //fab скрывает клавиатуру и выдает запрос к веб-сервису
-        fab.setOnClickListener(view -> {
+        fab.setOnClickListener(v -> {
             //получить текст из locationEditText и создать URL
-            EditText locationEditText = findViewById(R.id.locationEditText);
+            EditText locationEditText = mView.findViewById(R.id.locationEditText);
             URL url = createURL(locationEditText.getText().toString());
 
             //скрыть клавиатуру и запустить GetWeatherTask для получения
             //погодных данных от веб-сервиса weatherbit.io в отдельном потоке
             if (url != null) {
                 dismissKeyboard(locationEditText);
-                GetWeatherTask getLocalWeatherTask = new GetWeatherTask();
+                ListWeatherFragment.GetWeatherTask getLocalWeatherTask = new ListWeatherFragment.GetWeatherTask();
                 getLocalWeatherTask.execute(url);
             } else {
-                Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.invalid_url, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(v.findViewById(R.id.rootFragmentListWeather), R.string.invalid_url, Snackbar.LENGTH_LONG).show();
             }
         });
+        return mView;
     }
 
     //метод закрывает клавиатуру при касании кнопки fab
     private void dismissKeyboard(View view) {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -101,15 +102,15 @@ public class MainActivity extends AppCompatActivity {
                             jsonBuilder.append(line).append("\n");
                         }
                     } catch (IOException e) {
-                        Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.read_error, Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(mView.findViewById(R.id.rootFragmentListWeather), R.string.read_error, Snackbar.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                     return new JSONObject(jsonBuilder.toString());
                 } else {
-                    Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.connect_error, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mView.findViewById(R.id.rootFragmentListWeather), R.string.connect_error, Snackbar.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
-                Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.connect_error, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mView.findViewById(R.id.rootFragmentListWeather), R.string.connect_error, Snackbar.LENGTH_LONG).show();
                 e.printStackTrace();
             } finally {
                 connection.disconnect();
@@ -156,7 +157,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
-
 }
