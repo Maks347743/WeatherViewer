@@ -27,11 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListWeatherFragment extends Fragment {
+    private WeatherDataSource mWeatherDataSource;
     //список объектов Weather с прогнозом погоды
     private List<Weather> mWeatherList = new ArrayList<>();
     //адаптер связывает объект Weather и элемент RecyclerView
     private WeatherAdapter mWeatherAdapter;
     private RecyclerView mWeatherRecyclerView;
+    private EditText mLocationEditText;
     //ссылка на заполняемый из фрагмента view
     private View mView;
 
@@ -48,14 +50,14 @@ public class ListWeatherFragment extends Fragment {
         FloatingActionButton fab = mView.findViewById(R.id.fab);
         //fab скрывает клавиатуру и выдает запрос к веб-сервису
         fab.setOnClickListener(v -> {
-            //получить текст из locationEditText и создать URL
-            EditText locationEditText = mView.findViewById(R.id.locationEditText);
-            URL url = createURL(locationEditText.getText().toString());
+            //получить текст из mLocationEditText и создать URL
+            mLocationEditText = mView.findViewById(R.id.locationEditText);
+            URL url = createURL(mLocationEditText.getText().toString());
 
             //скрыть клавиатуру и запустить GetWeatherTask для получения
             //погодных данных от веб-сервиса weatherbit.io в отдельном потоке
             if (url != null) {
-                dismissKeyboard(locationEditText);
+                dismissKeyboard(mLocationEditText);
                 ListWeatherFragment.GetWeatherTask getLocalWeatherTask = new ListWeatherFragment.GetWeatherTask();
                 getLocalWeatherTask.execute(url);
             } else {
@@ -63,6 +65,12 @@ public class ListWeatherFragment extends Fragment {
             }
         });
         return mView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mWeatherDataSource = new WeatherDataSource(getActivity().getApplicationContext());
     }
 
     //метод закрывает клавиатуру при касании кнопки fab
@@ -121,6 +129,8 @@ public class ListWeatherFragment extends Fragment {
         @Override
         protected void onPostExecute(JSONObject dailyWeather) {
             convertJSONtoArrayList(dailyWeather); //заполнение mWeatherList
+            //добавление или обновление данных в БД, в зависимости от того, есть ли там уже такой город или нет
+            mWeatherDataSource.updateCityWeather(mLocationEditText.getText().toString(), mWeatherList);
             mWeatherAdapter.notifyDataSetChanged(); //связать с RecyclerView
             mWeatherRecyclerView.smoothScrollToPosition(0); //прокрутить до начала
         }
