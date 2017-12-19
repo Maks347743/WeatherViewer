@@ -18,8 +18,8 @@
     <ImageView
         tools:src="@drawable/ic_done_black_24dp"
         android:id="@+id/conditionImageView"
-        android:layout_width="@dimen/image_side_length"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/weather_condition_image"
         android:scaleType="center"/>
 
