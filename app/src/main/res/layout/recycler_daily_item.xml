@@ -1,60 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_gap">
+
+    <TextView
+        tools:text="Sunday"
+        android:id="@+id/day_of_week_text_view"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="start"/>
 
     <ImageView
+        tools:src="@drawable/ic_done_black_24dp"
         android:id="@+id/conditionImageView"
         android:layout_width="@dimen/image_side_length"
         android:layout_height="match_parent"
         android:contentDescription="@string/weather_condition_image"
         android:scaleType="center"/>
 
-    <android.support.v7.widget.GridLayout
-        app:columnCount="3"
-        app:rowCount="2"
+    <TextView
+        tools:text="0"
+        android:gravity="end"
+        android:id="@+id/max_temp_text_view"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
         android:layout_weight="1"
-        app:useDefaultMargins="true">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_gap"/>
 
-        <TextView
-            android:id="@+id/dayTextView"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_column="0"
-            app:layout_columnSpan="3"/>
-
-        <TextView
-            android:id="@+id/lowTextView"
-            app:layout_row="1"
-            app:layout_column="0"
-            app:layout_columnWeight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"/>
-
-        <TextView
-            android:id="@+id/hiTextView"
-            app:layout_row="1"
-            app:layout_column="1"
-            app:layout_columnWeight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"/>
-
-        <TextView
-            android:id="@+id/humidityTextView"
-            app:layout_row="1"
-            app:layout_column="2"
-            app:layout_columnWeight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"/>
+    <TextView
+        tools:text="-2"
+        android:id="@+id/min_temp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
-    </android.support.v7.widget.GridLayout>
 
 </LinearLayout>

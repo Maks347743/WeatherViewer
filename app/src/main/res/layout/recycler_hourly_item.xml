@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/default_gap"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_gravity="center"
+        tools:text="23"
+        android:layout_marginBottom="@dimen/default_gap"
+        android:id="@+id/hour_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        tools:src="@drawable/ic_done_black_24dp"
+        android:layout_marginBottom="@dimen/default_gap"
+        android:id="@+id/hourly_condition_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        tools:text="10"
+        android:id="@+id/hourly_temperature_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="@dimen/current_temp_text_size"/>
+
+</LinearLayout>

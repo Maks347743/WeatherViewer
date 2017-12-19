@@ -17,68 +17,62 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder> {
+public class HourlyWeatherAdapter extends RecyclerView.Adapter<HourlyWeatherAdapter.HourlyWeatherViewHolder>  {
+
     private Context mContext;
     //кэш для уже загруженных объектов Bitmap
     private static Map<String, Bitmap> mConditionImagesBank = new HashMap<>();
-    private List<Weather> mForecast;
+    private List<HourlyWeather> mHourlyForecast;
 
-    WeatherAdapter(Context context, List<Weather> forecast){
+    HourlyWeatherAdapter(Context context, List<HourlyWeather> hourlyForecast){
         mContext = context;
-        mForecast = forecast;
+        mHourlyForecast = hourlyForecast;
     }
 
     @Override
-    public WeatherViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HourlyWeatherAdapter.HourlyWeatherViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View itemView = inflater.inflate(R.layout.recycler_daily_item, parent, false);
-        return new WeatherViewHolder(itemView, mContext);
+        View itemView = inflater.inflate(R.layout.recycler_hourly_item, parent, false);
+        return new HourlyWeatherAdapter.HourlyWeatherViewHolder(itemView, mContext);
     }
 
     @Override
-    public void onBindViewHolder(WeatherViewHolder holder, int position) {
-        Weather weather = mForecast.get(position);
-        holder.bind(weather, mConditionImagesBank);
+    public void onBindViewHolder(HourlyWeatherAdapter.HourlyWeatherViewHolder holder, int position) {
+        HourlyWeather hourlyWeather = mHourlyForecast.get(position);
+        holder.bind(hourlyWeather, mConditionImagesBank);
     }
 
     @Override
     public int getItemCount() {
-        return mForecast.size();
+        return mHourlyForecast.size();
     }
 
-    static class WeatherViewHolder extends RecyclerView.ViewHolder {
+    static class HourlyWeatherViewHolder extends RecyclerView.ViewHolder {
         private Context mContext;
         private ImageView mConditionImageView;
-        private TextView mDayTextView;
-        private TextView mLowTextView;
-        private TextView mHiTextView;
-        private TextView mHumidityTextView;
+        private TextView mTempTextView;
+        private TextView mHourTextView;
 
-        public WeatherViewHolder(View itemView, Context context) {
+        public HourlyWeatherViewHolder(View itemView, Context context) {
             super(itemView);
             mContext = context;
-            mConditionImageView = itemView.findViewById(R.id.conditionImageView);
-            mDayTextView = itemView.findViewById(R.id.dayTextView);
-            mLowTextView = itemView.findViewById(R.id.lowTextView);
-            mHiTextView = itemView.findViewById(R.id.hiTextView);
-            mHumidityTextView = itemView.findViewById(R.id.humidityTextView);
+            mConditionImageView = itemView.findViewById(R.id.hourly_condition_image_view);
+            mTempTextView = itemView.findViewById(R.id.hourly_temperature_text_view);
+            mHourTextView = itemView.findViewById(R.id.hour_text_view);
         }
 
-        public void bind(Weather dailyWeather, Map<String, Bitmap> images){
+        public void bind(HourlyWeather hourlyWeather, Map<String, Bitmap> images){
             //если значок погодных условий уже загружен, использовать его
             //иначе - загрузить в отдельном потоке
-            if (images.containsKey(dailyWeather.getIconURL())){
-                mConditionImageView.setImageBitmap(images.get(dailyWeather.getIconURL()));
+            if (images.containsKey(hourlyWeather.getIconURL())){
+                mConditionImageView.setImageBitmap(images.get(hourlyWeather.getIconURL()));
             } else {
                 //загрузить и вывести значок погодных условий
-                new LoadImageTask(mConditionImageView).execute(dailyWeather.getIconURL());
+                new HourlyWeatherAdapter.HourlyWeatherViewHolder.LoadImageTask(mConditionImageView).execute(hourlyWeather.getIconURL());
             }
             //заполнить view необходимым текстом
-            mDayTextView.setText(mContext.getString(R.string.day_description, dailyWeather.getDayOfWeek(), dailyWeather.getDescription()));
-            mLowTextView.setText(mContext.getString(R.string.low_temp, dailyWeather.getMinTemp()));
-            mHiTextView.setText(mContext.getString(R.string.high_temp, dailyWeather.getMaxTemp()));
-            mHumidityTextView.setText(mContext.getString(R.string.humidity, dailyWeather.getHumidity()));
-
+            mHourTextView.setText(hourlyWeather.getCurrentHour());
+            mTempTextView.setText(hourlyWeather.getCurrentTemperature());
         }
 
         //AsyncTask для загрузки изображений в отдельном потоке
@@ -122,8 +116,4 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             }
         }
     }
-
-
-
-
 }

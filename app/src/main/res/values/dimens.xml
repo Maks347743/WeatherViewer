@@ -2,4 +2,8 @@
     <dimen name="fab_margin_top">20dp</dimen>
     <dimen name="content_margin">16dp</dimen>
     <dimen name="image_side_length">50dp</dimen>
+    <dimen name="current_city_text_view_size">40sp</dimen>
+    <dimen name="current_temperature_text_view_size">80sp</dimen>
+    <dimen name="current_day_of_week_text_view_size">20sp</dimen>
+    <dimen name="current_temp_text_size">20sp</dimen>
 </resources>

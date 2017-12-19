@@ -39,9 +39,7 @@ public class FragmentActivity extends AppCompatActivity implements SearchView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         WeatherFragment weatherFragment = new WeatherFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("city", city);
-        weatherFragment.setArguments(bundle);
+        weatherFragment.initArguments(city);
         fragmentTransaction.replace(R.id.fragment_weather_container, weatherFragment);
         //закрытие клавиатуры
         mSearchView.clearFocus();
