@@ -69,7 +69,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + Tables.DAILY_WEATHER.getTableName() + "(" +
                 Tables.ColumnsTableDailyWeather.ID.getColumnName() + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 Tables.ColumnsTableDailyWeather.CITY_ID.getColumnName() + " INTEGER NOT NULL," +
-                " FOREIGN KEY (" + Tables.ColumnsTableDailyWeather.CITY_ID.getColumnName() + ") REFERENCES " + Tables.CITY.getTableName() + "("+Tables.ColumnsTableCity.ID.getColumnName() + "), " +
                 Tables.ColumnsTableDailyWeather.DAY_OF_WEEK.getColumnName() + " TEXT NOT NULL, " +
                 Tables.ColumnsTableDailyWeather.MIN_TEMP.getColumnName() + " TEXT NOT NULL, " +
                 Tables.ColumnsTableDailyWeather.MAX_TEMP.getColumnName() + " TEXT NOT NULL, " +
