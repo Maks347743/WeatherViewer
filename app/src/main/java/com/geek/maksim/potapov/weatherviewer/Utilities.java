@@ -22,7 +22,7 @@ public class Utilities {
         return dateFormatter.format(calendar.getTime());
     }
 
-    public static String convertStringToHour(String datetime){
+    public static String convertStringToHour(String datetime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:HH");
         Date date = null;
         try {
@@ -30,8 +30,11 @@ public class Utilities {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Calendar calendar = GregorianCalendar.getInstance();
+        TimeZone timeZone = TimeZone.getDefault();
+        Calendar calendar = GregorianCalendar.getInstance(timeZone);
+        int offset = Math.abs(timeZone.getOffset(calendar.getTimeInMillis())/3600000);
         calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, offset);
         return String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
     }
 }

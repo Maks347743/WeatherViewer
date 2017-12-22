@@ -4,38 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_gap">
+    android:layout_height="wrap_content">
 
     <TextView
         tools:text="Sunday"
         android:id="@+id/day_of_week_text_view"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="5"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         android:gravity="start"/>
 
     <ImageView
         tools:src="@drawable/ic_done_black_24dp"
         android:id="@+id/conditionImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:contentDescription="@string/weather_condition_image"
-        android:scaleType="center"/>
+        android:scaleType="centerInside"/>
 
     <TextView
         tools:text="0"
         android:gravity="end"
         android:id="@+id/max_temp_text_view"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         android:layout_marginEnd="@dimen/default_gap"/>
 
     <TextView
         tools:text="-2"
         android:id="@+id/min_temp_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:gravity="end"
+        android:layout_weight="1"
+        android:textSize="12sp"
         android:layout_height="wrap_content"/>
 
 

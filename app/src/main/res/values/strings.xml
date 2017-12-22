@@ -5,8 +5,8 @@
     <string name="hourly_web_service_url">http://api.weatherbit.io/v2.0/forecast/hourly?city=%s&amp;key=%s</string>
     <string name="invalid_url">Invalid URL</string>
     <string name="weather_condition_image">A graphical representation of the dailyWeather conditions</string>
-    <string name="high_temp">High: %s</string>
-    <string name="low_temp">Low: %s</string>
+    <string name="high_temp">%s</string>
+    <string name="low_temp">%s</string>
     <string name="day_description">%1$s: %2$s</string>
     <string name="humidity">Humidity: %s</string>
     <string name="hint_text">Enter city</string>
