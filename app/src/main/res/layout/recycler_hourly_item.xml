@@ -8,28 +8,31 @@
     android:layout_height="95dp">
 
     <TextView
-        android:layout_gravity="center"
         tools:text="23"
+        android:gravity="center"
         android:id="@+id/hour_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"/>
 
     <ImageView
-        tools:src="@drawable/ic_done_black_24dp"
+        android:layout_gravity="center"
+        tools:src="@drawable/s03d"
         android:id="@+id/hourly_condition_image_view"
         android:layout_marginTop="@dimen/default_gap"
         android:layout_marginBottom="@dimen/default_gap"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:adjustViewBounds="true"
         android:scaleType="centerInside"/>
 
     <TextView
         tools:text="10"
         android:id="@+id/hourly_temperature_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:textSize="20sp"/>
 
 </LinearLayout>

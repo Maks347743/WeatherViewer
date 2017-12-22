@@ -12,8 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="30"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -47,10 +46,10 @@
     </LinearLayout>
 
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="60">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/linearHourlyTitle"
@@ -96,16 +95,15 @@
             android:id="@+id/hourly_weather_recycler_view"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/linearHourlyTitle"/>
+            android:layout_height="wrap_content"/>
 
         <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="@dimen/default_gap"
             android:id="@+id/daily_weather_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/hourly_weather_recycler_view"/>
+            android:layout_height="wrap_content"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 </LinearLayout>
 

@@ -10,37 +10,39 @@
         tools:text="Sunday"
         android:id="@+id/day_of_week_text_view"
         android:layout_width="0dp"
-        android:layout_weight="5"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:gravity="start"/>
+        android:layout_weight="10"
+        android:layout_height="match_parent"
+        android:textSize="16sp"
+        android:gravity="start|center_vertical"/>
 
     <ImageView
-        tools:src="@drawable/ic_done_black_24dp"
+        tools:src="@drawable/s03d"
         android:id="@+id/conditionImageView"
         android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:contentDescription="@string/weather_condition_image"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"/>
 
     <TextView
         tools:text="0"
-        android:gravity="end"
+        android:layout_gravity="center_vertical"
+        android:gravity="end|center_vertical"
         android:id="@+id/max_temp_text_view"
         android:layout_width="0dp"
-        android:layout_weight="4"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:layout_weight="7"
+        android:layout_height="match_parent"
+        android:textSize="16sp"
         android:layout_marginEnd="@dimen/default_gap"/>
 
     <TextView
-        tools:text="-2"
+        tools:text="-12"
         android:id="@+id/min_temp_text_view"
         android:layout_width="0dp"
-        android:gravity="end"
-        android:layout_weight="1"
-        android:textSize="12sp"
-        android:layout_height="wrap_content"/>
+        android:gravity="end|center_vertical"
+        android:layout_weight="3"
+        android:textSize="16sp"
+        android:layout_height="match_parent"/>
 
 
 
