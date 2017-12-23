@@ -1,5 +1,6 @@
 package com.geek.maksim.potapov.weatherviewer;
 
+import android.animation.LayoutTransition;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 public class FragmentActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     SearchView mSearchView;
@@ -32,6 +34,9 @@ public class FragmentActivity extends AppCompatActivity implements SearchView.On
         mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setOnQueryTextListener(this);
+        //анимация
+        LinearLayout searchBar = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_bar);
+        searchBar.setLayoutTransition(new LayoutTransition());
         return super.onCreateOptionsMenu(menu);
     }
 
