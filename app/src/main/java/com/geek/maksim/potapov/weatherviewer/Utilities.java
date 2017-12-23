@@ -5,13 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class Utilities {
 
     //преобразование временной метки в название дня недели (Monday, ...)
     public static String convertTimeStampToDay(long timeStamp) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(timeStamp * 1000); //получение времени
         //получение дефолтного часового пояса устройства
         TimeZone timeZone = TimeZone.getDefault();

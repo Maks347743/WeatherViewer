@@ -1,5 +1,6 @@
 package com.geek.maksim.potapov.weatherviewer;
 
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,8 +18,16 @@ public class DailyWeather {
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(0);
         this.mDayOfWeek = Utilities.convertTimeStampToDay(timeStamp);
-        this.mMinTemp = numberFormat.format(minTemp) + "\u00B0";
-        this.mMaxTemp = numberFormat.format(maxTemp) + "\u00B0";
+        if (numberFormat.format(minTemp).equals("-0")){
+            this.mMinTemp = "0" + "\u00B0";
+        } else {
+            this.mMinTemp = numberFormat.format(minTemp) + "\u00B0";
+        }
+        if (numberFormat.format(maxTemp).equals("-0")){
+            this.mMaxTemp = "0" + "\u00B0";
+        } else {
+            this.mMaxTemp = numberFormat.format(maxTemp) + "\u00B0";
+        }
         this.mIconURL = "https://www.weatherbit.io/static/img/icons/" + iconName + ".png";
     }
 

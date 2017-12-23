@@ -13,10 +13,14 @@ public class HourlyWeather {
     public HourlyWeather(String currentDescription, double currentTemperature, String dateTime, String iconCode) {
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(0);
-        mCurrentDescription = currentDescription;
-        mCurrentTemperature = numberFormat.format(currentTemperature) + "\u00B0";
-        mCurrentHour = Utilities.convertStringToHour(dateTime);
-        mIconURL = "https://www.weatherbit.io/static/img/icons/" + iconCode + ".png";
+        this.mCurrentDescription = currentDescription;
+        if (numberFormat.format(currentTemperature).equals("-0")){
+            this.mCurrentTemperature = "0" + "\u00B0";
+        } else {
+            this.mCurrentTemperature = numberFormat.format(currentTemperature) + "\u00B0";
+        }
+        this.mCurrentHour = Utilities.convertStringToHour(dateTime);
+        this.mIconURL = "https://www.weatherbit.io/static/img/icons/" + iconCode + ".png";
     }
 
     public String getCurrentDescription() {

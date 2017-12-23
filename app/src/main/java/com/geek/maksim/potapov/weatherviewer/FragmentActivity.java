@@ -27,6 +27,7 @@ public class FragmentActivity extends AppCompatActivity implements SearchView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         mSearchView = (SearchView) menu.findItem(R.id.search_view).getActionView();
+        mSearchView.setQueryHint(getString(R.string.hint_text));
         mItemSearch = menu.findItem(R.id.search_view);
         mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
         mSearchView.setSubmitButtonEnabled(true);
