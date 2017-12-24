@@ -1,109 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_fragment_weather"
-    android:layout_width="match_parent"
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/refresh"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/content_margin"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/current_city_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_gap"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            tools:text="Moscow"/>
-
-        <TextView
-            android:id="@+id/current_weather_description_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_gap"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textSize="@dimen/current_weather_description_text_view_size"
-            tools:text="Cloudy"/>
-
-        <TextView
-            android:id="@+id/current_temperature_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_gap"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="@dimen/current_temperature_text_view_size"
-            tools:text="1\u00B0"/>
-    </LinearLayout>
-
-
-    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/root_fragment_weather"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/content_margin"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/linearHourlyTitle"
-            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/current_day_of_week_text_view"
-                android:layout_width="wrap_content"
+                android:id="@+id/current_city_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/default_gap"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/current_day_of_week_text_view_size"
-                tools:text="Sunday"/>
+                android:layout_marginTop="@dimen/default_gap"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:text="Moscow"/>
 
             <TextView
-                android:id="@+id/today_text_view"
-                android:layout_width="0dp"
+                android:id="@+id/current_weather_description_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                tools:text="Today"/>
+                android:layout_marginTop="@dimen/default_gap"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="@dimen/current_weather_description_text_view_size"
+                tools:text="Cloudy"/>
 
             <TextView
-                android:id="@+id/current_max_temp_text_view"
-                android:layout_width="wrap_content"
+                android:id="@+id/current_temperature_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="10"/>
-
-            <TextView
-                android:id="@+id/current_min_temp_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_gap"
-                tools:text="-1"/>
-
+                android:layout_marginTop="@dimen/default_gap"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="@dimen/current_temperature_text_view_size"
+                tools:text="1\u00B0"/>
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/hourly_weather_recycler_view"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="@dimen/default_gap"
-            android:id="@+id/daily_weather_recycler_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/linearHourlyTitle"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/current_day_of_week_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/default_gap"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/current_day_of_week_text_view_size"
+                    tools:text="Sunday"/>
+
+                <TextView
+                    android:id="@+id/today_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    tools:text="Today"/>
+
+                <TextView
+                    android:id="@+id/current_max_temp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="10"/>
+
+                <TextView
+                    android:id="@+id/current_min_temp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_gap"
+                    tools:text="-1"/>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/hourly_weather_recycler_view"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="@dimen/default_gap"
+                android:id="@+id/daily_weather_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
+
 

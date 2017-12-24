@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,7 +27,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String CITY_KEY = "city";
     //список объектов DailyWeather с прогнозом погоды
     private List<DailyWeather> mDailyWeatherList = new ArrayList<>();
@@ -44,11 +45,15 @@ public class WeatherFragment extends Fragment {
     private TextView mCurrentMinTempTextView;
     //ссылка на заполняемый из фрагмента view
     private View mView;
+    private SwipeRefreshLayout mRefreshLayout;
+    private String city;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_weather, container, false);
+        mRefreshLayout = mView.findViewById(R.id.refresh);
+        mRefreshLayout.setOnRefreshListener(this);
         mDailyWeatherRecyclerView = mView.findViewById(R.id.daily_weather_recycler_view);
         mHourlyWeatherRecyclerView = mView.findViewById(R.id.hourly_weather_recycler_view);
         mDailyWeatherAdapter = new DailyWeatherAdapter(getActivity(), mDailyWeatherList);
@@ -63,7 +68,7 @@ public class WeatherFragment extends Fragment {
 
         //получить текст из аргументов фрагмента и создать URL
         Bundle arguments = getArguments();
-        String city = arguments.getString(CITY_KEY);
+        city = arguments.getString(CITY_KEY);
         URL dailyUrl = createDailyURL(city);
 
         //запустить GetDailyWeatherTask для получения ежедневных
@@ -143,11 +148,15 @@ public class WeatherFragment extends Fragment {
         @Override
         protected void onPostExecute(JSONObject dailyWeather) {
             convertDailyJSONtoArrayList(dailyWeather); //заполнение mDailyWeatherList
-            mCurrentDayOfWeekTextView.setText(mDailyWeatherList.get(0).getDayOfWeek());
-            mCurrentMaxTempTextView.setText(mDailyWeatherList.get(0).getMaxTemp());
-            mCurrentMinTempTextView.setText(mDailyWeatherList.get(0).getMinTemp());
-            mDailyWeatherAdapter.notifyDataSetChanged(); //связать с RecyclerView
-            mDailyWeatherRecyclerView.smoothScrollToPosition(0); //прокрутить до начала
+            if (mDailyWeatherList.size() == 16) {
+                mCurrentDayOfWeekTextView.setText(mDailyWeatherList.get(0).getDayOfWeek());
+                mCurrentMaxTempTextView.setText(mDailyWeatherList.get(0).getMaxTemp());
+                mCurrentMinTempTextView.setText(mDailyWeatherList.get(0).getMinTemp());
+                mDailyWeatherAdapter.notifyDataSetChanged(); //связать с RecyclerView
+                mDailyWeatherRecyclerView.smoothScrollToPosition(0); //прокрутить до начала
+            } else {
+                Snackbar.make(mView.findViewById(R.id.root_fragment_weather), R.string.connect_error, Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -234,10 +243,14 @@ public class WeatherFragment extends Fragment {
         @Override
         protected void onPostExecute(JSONObject hourlyForecast) {
             convertHourlyJSONtoArrayList(hourlyForecast); //заполнение mHourlyWeatherList
-            mCurrentDescriptionTextView.setText(mHourlyWeatherList.get(0).getCurrentDescription());
-            mCurrentTemperatureTextView.setText(mHourlyWeatherList.get(0).getCurrentTemperature());
-            mHourlyWeatherAdapter.notifyDataSetChanged(); //связать с RecyclerView
-            mHourlyWeatherRecyclerView.smoothScrollToPosition(0); //прокрутить до начала
+            if (mHourlyWeatherList.size() > 0){
+                mCurrentDescriptionTextView.setText(mHourlyWeatherList.get(0).getCurrentDescription());
+                mCurrentTemperatureTextView.setText(mHourlyWeatherList.get(0).getCurrentTemperature());
+                mHourlyWeatherAdapter.notifyDataSetChanged(); //связать с RecyclerView
+                mHourlyWeatherRecyclerView.smoothScrollToPosition(0); //прокрутить до начала
+            } else {
+                Snackbar.make(mView.findViewById(R.id.root_fragment_weather), R.string.connect_error, Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -274,5 +287,11 @@ public class WeatherFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString(CITY_KEY, city);
         setArguments(bundle);
+    }
+
+    @Override
+    public void onRefresh() {
+        mRefreshLayout.setRefreshing(true);
+        ((FragmentActivity)getActivity()).updateWeather(city);
     }
 }

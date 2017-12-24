@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
-public class FragmentActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-    SearchView mSearchView;
-    MenuItem mItemSearch;
+public class FragmentActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
+    private SearchView mSearchView;
+    private MenuItem mItemSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +43,24 @@ public class FragmentActivity extends AppCompatActivity implements SearchView.On
 
     @Override
     public boolean onQueryTextSubmit(String city) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.initArguments(city);
-        fragmentTransaction.replace(R.id.fragment_weather_container, weatherFragment);
         //закрытие клавиатуры
         mSearchView.clearFocus();
         mItemSearch.collapseActionView();
-        fragmentTransaction.commit();
+        updateWeather(city);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    public void updateWeather(String city){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        WeatherFragment weatherFragment = new WeatherFragment();
+        weatherFragment.initArguments(city);
+        fragmentTransaction.replace(R.id.fragment_weather_container, weatherFragment);
+        fragmentTransaction.commit();
     }
 }
