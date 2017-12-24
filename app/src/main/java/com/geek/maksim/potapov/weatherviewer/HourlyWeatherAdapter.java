@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -52,6 +53,7 @@ public class HourlyWeatherAdapter extends RecyclerView.Adapter<HourlyWeatherAdap
         private ImageView mConditionImageView;
         private TextView mTempTextView;
         private TextView mHourTextView;
+        private ProgressBar mProgressBar;
 
         public HourlyWeatherViewHolder(View itemView, Context context) {
             super(itemView);
@@ -59,6 +61,7 @@ public class HourlyWeatherAdapter extends RecyclerView.Adapter<HourlyWeatherAdap
             mConditionImageView = itemView.findViewById(R.id.hourly_condition_image_view);
             mTempTextView = itemView.findViewById(R.id.hourly_temperature_text_view);
             mHourTextView = itemView.findViewById(R.id.hour_text_view);
+            mProgressBar = itemView.findViewById(R.id.hourly_progress_bar);
         }
 
         public void bind(HourlyWeather hourlyWeather, Map<String, Bitmap> images){
@@ -66,6 +69,8 @@ public class HourlyWeatherAdapter extends RecyclerView.Adapter<HourlyWeatherAdap
             //иначе - загрузить в отдельном потоке
             if (images.containsKey(hourlyWeather.getIconURL())){
                 mConditionImageView.setImageBitmap(images.get(hourlyWeather.getIconURL()));
+                mProgressBar.setVisibility(View.GONE);
+                mConditionImageView.setVisibility(View.VISIBLE);
             } else {
                 //загрузить и вывести значок погодных условий
                 new HourlyWeatherAdapter.HourlyWeatherViewHolder.LoadImageTask(mConditionImageView).execute(hourlyWeather.getIconURL());
@@ -113,6 +118,8 @@ public class HourlyWeatherAdapter extends RecyclerView.Adapter<HourlyWeatherAdap
             @Override
             protected void onPostExecute(Bitmap bitmap) {
                 mImageView.setImageBitmap(bitmap);
+                mProgressBar.setVisibility(View.GONE);
+                mImageView.setVisibility(View.VISIBLE);
             }
         }
     }

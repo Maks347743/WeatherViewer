@@ -15,16 +15,29 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"/>
 
-    <ImageView
-        android:layout_gravity="center"
-        tools:src="@drawable/s03d"
-        android:id="@+id/hourly_condition_image_view"
+    <FrameLayout
         android:layout_marginTop="@dimen/default_gap"
         android:layout_marginBottom="@dimen/default_gap"
         android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerInside"/>
+        android:layout_height="30dp">
+
+        <ProgressBar
+            android:id="@+id/hourly_progress_bar"
+            android:layout_gravity="center"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            />
+        <ImageView
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            tools:src="@drawable/s03d"
+            android:id="@+id/hourly_condition_image_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"/>
+    </FrameLayout>
+
 
     <TextView
         tools:text="10"

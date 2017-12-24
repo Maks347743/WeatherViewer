@@ -15,14 +15,29 @@
         android:textSize="16sp"
         android:gravity="start|center_vertical"/>
 
-    <ImageView
-        tools:src="@drawable/s03d"
-        android:id="@+id/conditionImageView"
+    <FrameLayout
         android:layout_width="30dp"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/weather_condition_image"
-        android:scaleType="centerInside"
-        android:adjustViewBounds="true"/>
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:layout_gravity="center"
+            android:id="@+id/daily_progress_bar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+
+        <ImageView
+            android:visibility="gone"
+            android:layout_gravity="center"
+            tools:src="@drawable/s03d"
+            android:id="@+id/dailyConditionImageView"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/weather_condition_image"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"/>
+
+    </FrameLayout>
+
 
     <TextView
         tools:text="0"
