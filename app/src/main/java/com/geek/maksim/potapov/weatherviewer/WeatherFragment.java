@@ -1,5 +1,6 @@
 package com.geek.maksim.potapov.weatherviewer;
 
+import android.animation.LayoutTransition;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,10 +9,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -27,7 +34,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
     private static final String CITY_KEY = "city";
     //список объектов DailyWeather с прогнозом погоды
     private List<DailyWeather> mDailyWeatherList = new ArrayList<>();
@@ -46,12 +53,19 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     //ссылка на заполняемый из фрагмента view
     private View mView;
     private SwipeRefreshLayout mRefreshLayout;
-    private String city;
+    private SearchView mSearchView;
+    private MenuItem mItemSearch;
+    private TextView mCurrentCityTextView;
+    private LinearLayout mHourlyLinearTitle;
+    private String mCity;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_weather, container, false);
+        Toolbar toolbar = mView.findViewById(R.id.toolbar);
+        ((FragmentActivity)getActivity()).setSupportActionBar(toolbar);
         mRefreshLayout = mView.findViewById(R.id.refresh);
         mRefreshLayout.setOnRefreshListener(this);
         mDailyWeatherRecyclerView = mView.findViewById(R.id.daily_weather_recycler_view);
@@ -65,36 +79,20 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         RecyclerView.LayoutManager hourlyLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mHourlyWeatherRecyclerView.setLayoutManager(hourlyLayoutManager);
         mHourlyWeatherRecyclerView.setAdapter(mHourlyWeatherAdapter);
+        setHasOptionsMenu(true);
+        mCurrentCityTextView = mView.findViewById(R.id.current_city_text_view);
 
-        //получить текст из аргументов фрагмента и создать URL
-        Bundle arguments = getArguments();
-        city = arguments.getString(CITY_KEY);
-        URL dailyUrl = createDailyURL(city);
-
-        //запустить GetDailyWeatherTask для получения ежедневных
-        //погодных данных от веб-сервиса weatherbit.io в отдельном потоке
-        if (dailyUrl != null) {
-            GetDailyWeatherTask getDailyWeatherTask = new GetDailyWeatherTask();
-            getDailyWeatherTask.execute(dailyUrl);
-        } else {
-            Snackbar.make(mView.findViewById(R.id.root_fragment_weather), R.string.invalid_url, Snackbar.LENGTH_LONG).show();
-        }
-
-        URL hourlyUrl = createHourlyURL(city);
-
-        if (hourlyUrl != null) {
-            GetHourlyWeatherTask getHourlyWeatherTask = new GetHourlyWeatherTask();
-            getHourlyWeatherTask.execute(hourlyUrl);
-        }
-        TextView currentCityTextView = mView.findViewById(R.id.current_city_text_view);
-        currentCityTextView.setText(city);
         mCurrentDescriptionTextView = mView.findViewById(R.id.current_weather_description_text_view);
         mCurrentTemperatureTextView = mView.findViewById(R.id.current_temperature_text_view);
         mCurrentDayOfWeekTextView = mView.findViewById(R.id.current_day_of_week_text_view);
         mTodayTextView = mView.findViewById(R.id.today_text_view);
-        mTodayTextView.setText(R.string.today);
         mCurrentMaxTempTextView = mView.findViewById(R.id.current_max_temp_text_view);
         mCurrentMinTempTextView = mView.findViewById(R.id.current_min_temp_text_view);
+        mHourlyLinearTitle = mView.findViewById(R.id.hourly_linear_title);
+        if (mCity == null){
+            mRefreshLayout.setEnabled(false);
+            mHourlyLinearTitle.setVisibility(View.INVISIBLE);
+        }
         return mView;
     }
 
@@ -291,7 +289,69 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
-        mRefreshLayout.setRefreshing(true);
-        ((FragmentActivity)getActivity()).updateWeather(city);
+        mRefreshLayout.setRefreshing(false);
+        if (mCity != null && !mCity.isEmpty()){
+            mRefreshLayout.setRefreshing(true);
+            updateWeather(mCity);
+            mRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        mSearchView = (SearchView) menu.findItem(R.id.search_view).getActionView();
+        mSearchView.setQueryHint(getString(R.string.search_hint_text));
+        mItemSearch = menu.findItem(R.id.search_view);
+        mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setOnQueryTextListener(this);
+        //анимация
+        LinearLayout searchBar = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_bar);
+        searchBar.setLayoutTransition(new LayoutTransition());
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String city) {
+        //закрытие клавиатуры
+        mSearchView.clearFocus();
+        mItemSearch.collapseActionView();
+        updateWeather(city);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+
+    public void updateWeather(String city){
+        URL dailyUrl = createDailyURL(city);
+        //запустить GetDailyWeatherTask для получения ежедневных
+        //погодных данных от веб-сервиса weatherbit.io в отдельном потоке
+        if (dailyUrl != null) {
+            GetDailyWeatherTask getDailyWeatherTask = new GetDailyWeatherTask();
+            getDailyWeatherTask.execute(dailyUrl);
+        } else {
+            Snackbar.make(mView.findViewById(R.id.root_fragment_weather), R.string.invalid_url, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        URL hourlyUrl = createHourlyURL(city);
+
+        if (hourlyUrl != null) {
+            GetHourlyWeatherTask getHourlyWeatherTask = new GetHourlyWeatherTask();
+            getHourlyWeatherTask.execute(hourlyUrl);
+        } else {
+            Snackbar.make(mView.findViewById(R.id.root_fragment_weather), R.string.invalid_url, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        mRefreshLayout.setEnabled(true);
+        mHourlyLinearTitle.setVisibility(View.VISIBLE);
+        mCurrentCityTextView.setText(city);
+        mTodayTextView.setText(R.string.today);
+        this.mCity = city;
     }
 }
