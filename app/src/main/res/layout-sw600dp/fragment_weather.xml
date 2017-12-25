@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,7 +26,7 @@
                 android:id="@+id/current_city_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_gap"
+                android:layout_marginTop="@dimen/double_default_gap"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 tools:text="Moscow"/>
@@ -36,7 +35,7 @@
                 android:id="@+id/current_weather_description_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_gap"
+                android:layout_marginTop="@dimen/double_default_gap"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textSize="@dimen/current_weather_description_text_view_size"
@@ -46,7 +45,7 @@
                 android:id="@+id/current_temperature_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_gap"
+                android:layout_marginTop="@dimen/double_default_gap"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textSize="@dimen/current_temperature_text_view_size"
@@ -72,12 +71,13 @@
                 android:id="@+id/current_day_of_week_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/default_gap"
+                android:layout_marginEnd="@dimen/double_default_gap"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="@dimen/current_day_of_week_text_view_size"
                 tools:text="Sunday"/>
 
             <TextView
+                android:textSize="@dimen/default_tablet_text_size"
                 android:id="@+id/today_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -86,16 +86,18 @@
                 tools:text="Today"/>
 
             <TextView
+                android:textSize="@dimen/default_tablet_text_size"
                 android:id="@+id/current_max_temp_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="10"/>
 
             <TextView
+                android:textSize="@dimen/default_tablet_text_size"
                 android:id="@+id/current_min_temp_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_gap"
+                android:layout_marginStart="@dimen/double_default_gap"
                 tools:text="-1"/>
 
         </LinearLayout>
@@ -110,7 +112,7 @@
             android:id="@+id/daily_weather_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_gap"/>
+            android:layout_marginTop="@dimen/double_default_gap"/>
 
     </LinearLayout>
 </LinearLayout>

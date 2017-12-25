@@ -9,8 +9,10 @@
     <string name="low_temp">%s</string>
     <string name="day_description">%1$s: %2$s</string>
     <string name="humidity">Humidity: %s</string>
-    <string name="hint_text">Enter city</string>
+    <string name="search_hint_text">Enter city</string>
     <string name="read_error">Unable to read dailyWeather data</string>
     <string name="connect_error">Unable to connect to web service</string>
     <string name="today">Today</string>
+    <string name="add_to_favorite_text">add to favorite</string>
+    <string name="favorite_cities_item_text">my favorite cities</string>
 </resources>

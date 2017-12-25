@@ -5,8 +5,21 @@
     <item
         android:id="@+id/search_view"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/hint_text"
+        android:title="@string/search_hint_text"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom"/>
+        app:showAsAction="collapseActionView|always"/>
+
+    <item
+        android:id="@+id/add_to_favorite_item"
+        android:icon="@drawable/heart_outline"
+        android:title="@string/add_to_favorite_text"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/favorite_cities_item"
+        android:title="@string/favorite_cities_item_text"
+        app:showAsAction="never"
+        />
 
 </menu>

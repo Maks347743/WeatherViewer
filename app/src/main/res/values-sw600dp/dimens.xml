@@ -1,0 +1,16 @@
+<resources>
+    <dimen name="content_margin">32dp</dimen>
+    <dimen name="image_side_length">60dp</dimen>
+    <dimen name="current_city_text_view_size">80sp</dimen>
+    <dimen name="current_temperature_text_view_size">160sp</dimen>
+    <dimen name="current_day_of_week_text_view_size">40sp</dimen>
+    <dimen name="current_temp_text_size">40sp</dimen>
+    <dimen name="recycler_hourly_item_height">190dp</dimen>
+    <dimen name="current_weather_description_text_view_size">30sp</dimen>
+    <dimen name="double_default_gap">16dp</dimen>
+    <dimen name="default_tablet_text_size">25sp</dimen>
+    <dimen name="daily_item_text_size">32sp</dimen>
+    <dimen name="progress_bar_side_length">40dp</dimen>
+    <dimen name="hour_text_size">30sp</dimen>
+    <dimen name="hourly_temperature_text_size">40sp</dimen>
+</resources>

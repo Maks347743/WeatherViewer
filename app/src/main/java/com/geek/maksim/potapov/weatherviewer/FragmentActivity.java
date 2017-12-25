@@ -4,8 +4,6 @@ import android.animation.LayoutTransition;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -30,7 +28,7 @@ public class FragmentActivity extends AppCompatActivity implements SearchView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         mSearchView = (SearchView) menu.findItem(R.id.search_view).getActionView();
-        mSearchView.setQueryHint(getString(R.string.hint_text));
+        mSearchView.setQueryHint(getString(R.string.search_hint_text));
         mItemSearch = menu.findItem(R.id.search_view);
         mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
         mSearchView.setSubmitButtonEnabled(true);
