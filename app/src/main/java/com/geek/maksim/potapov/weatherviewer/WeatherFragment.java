@@ -1,11 +1,14 @@
 package com.geek.maksim.potapov.weatherviewer;
 
 import android.animation.LayoutTransition;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +36,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
     private static final String CITY_KEY = "city";
@@ -75,13 +82,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         RecyclerView.LayoutManager dailyLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mDailyWeatherRecyclerView.setLayoutManager(dailyLayoutManager);
         mDailyWeatherRecyclerView.setAdapter(mDailyWeatherAdapter);
-
         RecyclerView.LayoutManager hourlyLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mHourlyWeatherRecyclerView.setLayoutManager(hourlyLayoutManager);
         mHourlyWeatherRecyclerView.setAdapter(mHourlyWeatherAdapter);
         setHasOptionsMenu(true);
         mCurrentCityTextView = mView.findViewById(R.id.current_city_text_view);
-
         mCurrentDescriptionTextView = mView.findViewById(R.id.current_weather_description_text_view);
         mCurrentTemperatureTextView = mView.findViewById(R.id.current_temperature_text_view);
         mCurrentDayOfWeekTextView = mView.findViewById(R.id.current_day_of_week_text_view);
@@ -93,6 +98,22 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mRefreshLayout.setEnabled(false);
             mHourlyLinearTitle.setVisibility(View.INVISIBLE);
         }
+       /* Bundle arguments = getArguments();
+        if (arguments != null) {*/
+            /*int position = arguments.getInt("position");*/
+            SharedPreferences preferences = getActivity().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
+            Set<String> cities = preferences.getStringSet("cities", null);
+            int cityPosition = preferences.getInt("position", -1);
+            if (cityPosition != -1){
+                if (cities != null){
+                    ArrayList<String> favoriteCities = new ArrayList<>();
+                    favoriteCities.addAll(cities);
+                    mCity = favoriteCities.get(cityPosition);
+                    updateWeather(mCity);
+                }
+            }
+
+      /*  }*/
         return mView;
     }
 
@@ -299,7 +320,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu, menu);
+        inflater.inflate(R.menu.menu_weather, menu);
         mSearchView = (SearchView) menu.findItem(R.id.search_view).getActionView();
         mSearchView.setQueryHint(getString(R.string.search_hint_text));
         mItemSearch = menu.findItem(R.id.search_view);
@@ -310,6 +331,40 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         LinearLayout searchBar = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_bar);
         searchBar.setLayoutTransition(new LayoutTransition());
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.add_to_favorite_item:
+                SharedPreferences preferences = getContext().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
+                if (preferences != null){
+                    HashSet<String> favorite_list = (HashSet<String>) preferences.getStringSet("cities", new HashSet<>());
+                    if (mCity!= null && !mCity.isEmpty()){
+                        if (!favorite_list.add(mCity)){
+                            Snackbar.make(mView, getString(R.string.city_already_added), Toast.LENGTH_SHORT).show();
+                        } else {
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.clear();
+                            editor.putStringSet("cities", favorite_list);
+                            editor.apply();
+                            Snackbar.make(mView, getString(R.string.city_addition_message), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Snackbar.make(mView, getString(R.string.nothing_to_add), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return true;
+            case R.id.favorite_cities_item:
+                FavoriteFragment favoriteFragment = new FavoriteFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_weather_container, favoriteFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -348,10 +403,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             Snackbar.make(mView.findViewById(R.id.root_fragment_weather), R.string.invalid_url, Snackbar.LENGTH_LONG).show();
             return;
         }
+        this.mCity = city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();
         mRefreshLayout.setEnabled(true);
         mHourlyLinearTitle.setVisibility(View.VISIBLE);
-        mCurrentCityTextView.setText(city);
+        mCurrentCityTextView.setText(mCity);
         mTodayTextView.setText(R.string.today);
-        this.mCity = city;
+
     }
 }

@@ -10,9 +10,12 @@
     <string name="day_description">%1$s: %2$s</string>
     <string name="humidity">Humidity: %s</string>
     <string name="search_hint_text">Enter city</string>
-    <string name="read_error">Unable to read dailyWeather data</string>
+    <string name="read_error">Unable to read daily weather data</string>
     <string name="connect_error">Unable to connect to web service</string>
     <string name="today">Today</string>
-    <string name="add_to_favorite_text">add to favorite</string>
-    <string name="favorite_cities_item_text">my favorite cities</string>
+    <string name="add_to_favorite_text">Add to favorite</string>
+    <string name="favorite_cities_item_text">My favorite cities</string>
+    <string name="city_addition_message">City added to favorite</string>
+    <string name="city_already_added">City had already been added</string>
+    <string name="nothing_to_add">Nothing to add</string>
 </resources>
