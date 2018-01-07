@@ -105,10 +105,6 @@ public class FavoriteFragment extends Fragment {
                editor.putInt("position", this.getLayoutPosition());
                editor.apply();
                WeatherFragment weatherFragment = new WeatherFragment();
-               /*Bundle bundle = new Bundle();
-               bundle.putInt("position", this.getLayoutPosition());
-               weatherFragment.setArguments(bundle);*/
-
                FragmentManager manager = ((FragmentActivity)mContext).getSupportFragmentManager();
                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                FragmentTransaction transaction = manager.beginTransaction();

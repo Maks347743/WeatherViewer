@@ -72,7 +72,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_weather, container, false);
         Toolbar toolbar = mView.findViewById(R.id.toolbar);
-        ((FragmentActivity)getActivity()).setSupportActionBar(toolbar);
+        ((FragmentActivity) getActivity()).setSupportActionBar(toolbar);
         mRefreshLayout = mView.findViewById(R.id.refresh);
         mRefreshLayout.setOnRefreshListener(this);
         mDailyWeatherRecyclerView = mView.findViewById(R.id.daily_weather_recycler_view);
@@ -94,26 +94,24 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mCurrentMaxTempTextView = mView.findViewById(R.id.current_max_temp_text_view);
         mCurrentMinTempTextView = mView.findViewById(R.id.current_min_temp_text_view);
         mHourlyLinearTitle = mView.findViewById(R.id.hourly_linear_title);
-        if (mCity == null){
+        if (mCity == null) {
             mRefreshLayout.setEnabled(false);
             mHourlyLinearTitle.setVisibility(View.INVISIBLE);
         }
-       /* Bundle arguments = getArguments();
-        if (arguments != null) {*/
-            /*int position = arguments.getInt("position");*/
-            SharedPreferences preferences = getActivity().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
-            Set<String> cities = preferences.getStringSet("cities", null);
-            int cityPosition = preferences.getInt("position", -1);
-            if (cityPosition != -1){
-                if (cities != null){
-                    ArrayList<String> favoriteCities = new ArrayList<>();
-                    favoriteCities.addAll(cities);
+        SharedPreferences preferences = getActivity().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
+        Set<String> cities = preferences.getStringSet("cities", null);
+        ArrayList<String> favoriteCities;
+        int cityPosition = preferences.getInt("position", -1);
+            if (cities != null) {
+                favoriteCities = new ArrayList<>();
+                favoriteCities.addAll(cities);
+                if (cityPosition != -1){
                     mCity = favoriteCities.get(cityPosition);
                     updateWeather(mCity);
+                } else {
+                    updateWeather(favoriteCities.get(favoriteCities.size() - 1));
                 }
             }
-
-      /*  }*/
         return mView;
     }
 
@@ -262,7 +260,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         @Override
         protected void onPostExecute(JSONObject hourlyForecast) {
             convertHourlyJSONtoArrayList(hourlyForecast); //заполнение mHourlyWeatherList
-            if (mHourlyWeatherList.size() > 0){
+            if (mHourlyWeatherList.size() > 0) {
                 mCurrentDescriptionTextView.setText(mHourlyWeatherList.get(0).getCurrentDescription());
                 mCurrentTemperatureTextView.setText(mHourlyWeatherList.get(0).getCurrentTemperature());
                 mHourlyWeatherAdapter.notifyDataSetChanged(); //связать с RecyclerView
@@ -302,7 +300,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    public void initArguments(String city){
+    public void initArguments(String city) {
         Bundle bundle = new Bundle();
         bundle.putString(CITY_KEY, city);
         setArguments(bundle);
@@ -311,7 +309,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh() {
         mRefreshLayout.setRefreshing(false);
-        if (mCity != null && !mCity.isEmpty()){
+        if (mCity != null && !mCity.isEmpty()) {
             mRefreshLayout.setRefreshing(true);
             updateWeather(mCity);
             mRefreshLayout.setRefreshing(false);
@@ -336,13 +334,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.add_to_favorite_item:
                 SharedPreferences preferences = getContext().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
-                if (preferences != null){
+                if (preferences != null) {
                     HashSet<String> favorite_list = (HashSet<String>) preferences.getStringSet("cities", new HashSet<>());
-                    if (mCity!= null && !mCity.isEmpty()){
-                        if (!favorite_list.add(mCity)){
+                    if (mCity != null && !mCity.isEmpty()) {
+                        if (!favorite_list.add(mCity)) {
                             Snackbar.make(mView, getString(R.string.city_already_added), Toast.LENGTH_SHORT).show();
                         } else {
                             SharedPreferences.Editor editor = preferences.edit();
@@ -382,7 +380,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
 
-    public void updateWeather(String city){
+    public void updateWeather(String city) {
         URL dailyUrl = createDailyURL(city);
         //запустить GetDailyWeatherTask для получения ежедневных
         //погодных данных от веб-сервиса weatherbit.io в отдельном потоке
