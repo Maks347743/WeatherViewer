@@ -1,5 +1,6 @@
 package com.geek.maksim.potapov.weatherviewer;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,4 +39,15 @@ public class Utilities {
         calendar.add(Calendar.HOUR_OF_DAY, offset);
         return String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
     }
+
+    public static String getFormatTemperature(double temperature) {
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(0);
+        if (numberFormat.format(temperature).equals("-0")){
+            return  "0" + "\u00B0";
+        } else {
+            return numberFormat.format(temperature) + "\u00B0";
+        }
+    }
+
 }

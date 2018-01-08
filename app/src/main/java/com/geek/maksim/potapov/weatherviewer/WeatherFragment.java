@@ -115,7 +115,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return mView;
     }
 
-    //создание URL веб-сервиса weatherbit.io для названия города
+    //создание URL веб-сервиса weatherbit.io для получения ежедневного прогноза погоды
     private URL createDailyURL(String city) {
         String apiKey = getString(R.string.api_key);
         String baseUrl = getString(R.string.daily_web_service_url);
@@ -210,7 +210,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    //создание URL веб-сервиса weatherbit.io для названия города
+    //создание URL веб-сервиса weatherbit.io для получения почасового прогноза погоды
     private URL createHourlyURL(String city) {
         String apiKey = getString(R.string.api_key);
         String baseUrl = getString(R.string.hourly_web_service_url);
@@ -298,12 +298,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public void initArguments(String city) {
-        Bundle bundle = new Bundle();
-        bundle.putString(CITY_KEY, city);
-        setArguments(bundle);
     }
 
     @Override

@@ -14,11 +14,7 @@ public class HourlyWeather {
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(0);
         this.mCurrentDescription = currentDescription;
-        if (numberFormat.format(currentTemperature).equals("-0")){
-            this.mCurrentTemperature = "0" + "\u00B0";
-        } else {
-            this.mCurrentTemperature = numberFormat.format(currentTemperature) + "\u00B0";
-        }
+        mCurrentTemperature = Utilities.getFormatTemperature(currentTemperature);
         this.mCurrentHour = Utilities.convertStringToHour(dateTime);
         this.mIconURL = "https://www.weatherbit.io/static/img/icons/" + iconCode + ".png";
     }

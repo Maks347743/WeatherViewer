@@ -18,4 +18,6 @@
     <string name="city_addition_message">City added to favorite</string>
     <string name="city_already_added">City had already been added</string>
     <string name="nothing_to_add">Nothing to add</string>
+    <string name="current_web_service_url">http://api.weatherbit.io/v2.0/current?city=%s&amp;key=%s</string>
+    <string name="icon_service_url">https://www.weatherbit.io/static/img/icons/%s.png</string>
 </resources>
