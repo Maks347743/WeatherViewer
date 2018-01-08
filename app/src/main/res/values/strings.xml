@@ -20,4 +20,6 @@
     <string name="nothing_to_add">Nothing to add</string>
     <string name="current_web_service_url">http://api.weatherbit.io/v2.0/current?city=%s&amp;key=%s</string>
     <string name="icon_service_url">https://www.weatherbit.io/static/img/icons/%s.png</string>
+    <string name="city_not_found">City doesn\'t exist</string>
+    <string name="enter_city_message">Enter city to add</string>
 </resources>

@@ -50,4 +50,9 @@ public class Utilities {
         }
     }
 
+    public static String getFormatCity(String city){
+        if (city.isEmpty()) return null;
+        return city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();
+    }
+
 }

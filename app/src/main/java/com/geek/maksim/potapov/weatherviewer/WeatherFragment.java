@@ -395,7 +395,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             Snackbar.make(mView.findViewById(R.id.root_fragment_weather), R.string.invalid_url, Snackbar.LENGTH_LONG).show();
             return;
         }
-        this.mCity = city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();
+        this.mCity = Utilities.getFormatCity(city);
         mRefreshLayout.setEnabled(true);
         mHourlyLinearTitle.setVisibility(View.VISIBLE);
         mCurrentCityTextView.setText(mCity);
