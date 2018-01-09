@@ -72,7 +72,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d("resume", "onCreateView()");
         mView = inflater.inflate(R.layout.fragment_weather, container, false);
         Toolbar toolbar = mView.findViewById(R.id.toolbar);
         ((FragmentActivity) getActivity()).setSupportActionBar(toolbar);
@@ -112,7 +111,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     updateWeather(cities.get(cities.size() - 1));
                 }
             } else {
-                if (mCity != null && !mCity.isEmpty()) {
+                mCity = preferences.getString(CITY_KEY, null);
+                if (mCity != null){
                     updateWeather(mCity);
                 }
             }
@@ -120,18 +120,14 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onStop() {
         if (mCity != null && !mCity.isEmpty()) {
-            outState.putString("city", mCity);
+            SharedPreferences preferences = getActivity().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
+            if (preferences!= null){
+                PreferencesHelper.saveCity(mCity, getActivity());
+            }
         }
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null) {
-            mCity = savedInstanceState.getString("city");
-        }
+        super.onStop();
     }
 
     //создание URL веб-сервиса weatherbit.io для получения ежедневного прогноза погоды

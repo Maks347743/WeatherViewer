@@ -26,4 +26,11 @@ class PreferencesHelper {
         editor.putString("cities", json);
         editor.apply();
     }
+
+    public static void saveCity(String city, Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("city", city);
+        editor.apply();
+    }
 }
