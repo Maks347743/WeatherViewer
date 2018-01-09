@@ -184,6 +184,7 @@ public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTo
                 String apiKey = getString(R.string.api_key);
                 URL checkCityUrl = new URL(String.format(getActivity().getString(R.string.current_web_service_url), cities[0], apiKey));
                 connection = (HttpURLConnection) checkCityUrl.openConnection();
+                int temp = connection.getResponseCode();
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     Snackbar.make(getView(), R.string.city_not_found, Snackbar.LENGTH_SHORT).show();
                     return null;

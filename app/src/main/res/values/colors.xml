@@ -5,4 +5,5 @@
     <color name="colorAccent">#448AFF</color>
     <color name="colorBackground">#263238</color>
     <color name="bg_row_background">#fa315b</color>
+    <color name="icon_background">#00000000</color>
 </resources>
