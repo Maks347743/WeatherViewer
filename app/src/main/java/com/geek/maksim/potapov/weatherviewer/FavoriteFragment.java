@@ -163,7 +163,7 @@ public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTo
             public void onClick(View view) {
                 SharedPreferences preferences = getActivity().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt("position", this.getLayoutPosition());
+                editor.putInt("position", this.getAdapterPosition());
                 editor.apply();
                 WeatherFragment weatherFragment = new WeatherFragment();
                 FragmentManager manager = ((FragmentActivity) mContext).getSupportFragmentManager();
@@ -173,7 +173,6 @@ public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTo
                 transaction.commit();
             }
         }
-
     }
 
     private class CheckCityTask extends AsyncTask<String, Void, HttpURLConnection> {
@@ -215,17 +214,21 @@ public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTo
         if (viewHolder instanceof FavoriteCityAdapter.FavoriteCityViewHolder){
             //сохранение индекса и наименования города для восстановления через Snackbar
             String cityName = ((FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mCityTextView.getText().toString();
-            final int deletedId = viewHolder.getAdapterPosition();
+            final int deletedIndex = viewHolder.getAdapterPosition();
             //удаление города из recyclerView
             mFavoriteCityAdapter.removeItem(viewHolder.getAdapterPosition());
             //удаление города из preference
-
+            SharedPreferences preferences = getActivity().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
+            if (preferences!= null) {
+                PreferencesHelper.saveFavoriteCities(mFavoriteList, getActivity());
+            }
             //отображение snackbar с опцией восстановления
             Snackbar snackbar = Snackbar
                     .make(getView(), cityName + " removed from favorite!", Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", view -> {
                 // выбрана опция восстановления
-                mFavoriteCityAdapter.restoreItem(cityName, deletedId);
+                mFavoriteCityAdapter.restoreItem(cityName, deletedIndex);
+                PreferencesHelper.saveFavoriteCities(mFavoriteList, getActivity());
             });
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
