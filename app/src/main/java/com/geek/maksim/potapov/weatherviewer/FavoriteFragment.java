@@ -2,6 +2,7 @@ package com.geek.maksim.potapov.weatherviewer;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,9 +11,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,18 +24,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-public class FavoriteFragment extends Fragment {
-    private HashSet<String> mFavoriteSet;
+
+public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+    private ArrayList<String> mFavoriteList;
     private View mView;
     private RecyclerView mFavoriteRecyclerView;
     private FavoriteCityAdapter mFavoriteCityAdapter;
@@ -44,13 +48,16 @@ public class FavoriteFragment extends Fragment {
         mView = inflater.inflate(R.layout.favorite_fragment, container, false);
         SharedPreferences preferences = getContext().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
         if (preferences != null) {
-            mFavoriteSet = (HashSet<String>) preferences.getStringSet("cities", new HashSet<String>() {
-            });
+            mFavoriteList = PreferencesHelper.loadFavoriteCities(preferences);
         }
         mFavoriteRecyclerView = mView.findViewById(R.id.favorite_recycler_view);
         mFavoriteRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mFavoriteCityAdapter = new FavoriteCityAdapter(getContext(), mFavoriteSet);
+        mFavoriteRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mFavoriteRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        mFavoriteCityAdapter = new FavoriteCityAdapter(getContext(), mFavoriteList);
         mFavoriteRecyclerView.setAdapter(mFavoriteCityAdapter);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new FavoriteRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mFavoriteRecyclerView);
         Toolbar toolbar = mView.findViewById(R.id.toolbar);
         ((FragmentActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
@@ -79,7 +86,7 @@ public class FavoriteFragment extends Fragment {
                         Snackbar.make(getView(), R.string.enter_city_message, Snackbar.LENGTH_SHORT).show();
                         return;
                     }
-                    if (mFavoriteSet.contains(mCity)) {
+                    if (mFavoriteList.contains(mCity)) {
                         Snackbar.make(getView(), R.string.city_already_added, Snackbar.LENGTH_SHORT).show();
                         return;
                     }
@@ -92,47 +99,63 @@ public class FavoriteFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public class FavoriteCityAdapter extends RecyclerView.Adapter<FavoriteCityAdapter.FavoriteCiteViewHolder> {
-        private HashSet<String> mFavoriteSet;
+    public class FavoriteCityAdapter extends RecyclerView.Adapter<FavoriteCityAdapter.FavoriteCityViewHolder> {
+        private List<String> mFavoriteList;
         private Context mContext;
 
-        public FavoriteCityAdapter(Context context, Set<String> cities) {
-            mFavoriteSet = (HashSet<String>) cities;
+        public FavoriteCityAdapter(Context context, List<String> cities) {
+            mFavoriteList = cities;
             mContext = context;
         }
 
         @Override
-        public FavoriteCityAdapter.FavoriteCiteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public FavoriteCityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             View itemView = inflater.inflate(R.layout.favorite_recycler_view_item, parent, false);
-            return new FavoriteCiteViewHolder(itemView, mContext);
+            return new FavoriteCityViewHolder(itemView, mContext);
         }
 
         @Override
-        public void onBindViewHolder(FavoriteCityAdapter.FavoriteCiteViewHolder holder, int position) {
-            ArrayList<String> cities = new ArrayList<>();
-            cities.addAll(mFavoriteSet);
-            holder.bind(cities.get(position));
+        public void onBindViewHolder(FavoriteCityViewHolder holder, final int position) {
+            holder.bind(mFavoriteList.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return mFavoriteSet.size();
+            return mFavoriteList.size();
         }
 
-        public class FavoriteCiteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        public void removeItem(int position) {
+            mFavoriteList.remove(position);
+            // notify the item removed by position
+            // to perform recycler view delete animations
+            // NOTE: don't call notifyDataSetChanged()
+            notifyItemRemoved(position);
+        }
+
+        public void restoreItem(String item, int position) {
+            mFavoriteList.add(position, item);
+            // notify item added by position
+            notifyItemInserted(position);
+        }
+
+        public class FavoriteCityViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private Context mContext;
             private TextView mCityTextView;
+            private RelativeLayout mViewBackground;
+            RelativeLayout mViewForeground;
 
-            public FavoriteCiteViewHolder(View itemView, Context context) {
+
+            public FavoriteCityViewHolder(View itemView, Context context) {
                 super(itemView);
                 mContext = context;
                 mCityTextView = itemView.findViewById(R.id.favorite_city_text_view);
+                mViewBackground = itemView.findViewById(R.id.view_background);
+                mViewForeground = itemView.findViewById(R.id.view_foreground);
                 itemView.setOnClickListener(this);
             }
 
             public void bind(String city) {
-                //заполнить view необходимым текстом
                 mCityTextView.setText(city);
             }
 
@@ -148,13 +171,6 @@ public class FavoriteFragment extends Fragment {
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.fragment_weather_container, weatherFragment);
                 transaction.commit();
-            }
-
-            @Override
-            public boolean onLongClick(View view) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                dialogBuilder.setTitle(R.string.city_addition_message);
-                return true;
             }
         }
 
@@ -184,16 +200,36 @@ public class FavoriteFragment extends Fragment {
             if (connection != null) {
                 SharedPreferences preferences = getContext().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
                 if (preferences != null) {
-                    mFavoriteSet.add(mCity);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.clear();
-                    editor.putStringSet("cities", mFavoriteSet);
-                    editor.apply();
+                    mFavoriteList.add(mCity);
+                    PreferencesHelper.saveFavoriteCities(mFavoriteList, getActivity());
                     mFavoriteCityAdapter.notifyDataSetChanged();
                     Snackbar.make(mView, getString(R.string.city_addition_message), Toast.LENGTH_SHORT).show();
                 }
                 connection.disconnect();
             }
+        }
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof FavoriteCityAdapter.FavoriteCityViewHolder){
+            //сохранение индекса и наименования города для восстановления через Snackbar
+            String cityName = ((FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mCityTextView.getText().toString();
+            final int deletedId = viewHolder.getAdapterPosition();
+            //удаление города из recyclerView
+            mFavoriteCityAdapter.removeItem(viewHolder.getAdapterPosition());
+            //удаление города из preference
+
+            //отображение snackbar с опцией восстановления
+            Snackbar snackbar = Snackbar
+                    .make(getView(), cityName + " removed from favorite!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", view -> {
+                // выбрана опция восстановления
+                mFavoriteCityAdapter.restoreItem(cityName, deletedId);
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+
         }
     }
 }

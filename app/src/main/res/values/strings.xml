@@ -22,4 +22,5 @@
     <string name="icon_service_url">https://www.weatherbit.io/static/img/icons/%s.png</string>
     <string name="city_not_found">City doesn\'t exist</string>
     <string name="enter_city_message">Enter city to add</string>
+    <string name="delete">DELETE</string>
 </resources>

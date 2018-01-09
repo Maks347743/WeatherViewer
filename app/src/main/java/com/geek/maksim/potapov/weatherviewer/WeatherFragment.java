@@ -99,17 +99,14 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mHourlyLinearTitle.setVisibility(View.INVISIBLE);
         }
         SharedPreferences preferences = getActivity().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
-        Set<String> cities = preferences.getStringSet("cities", null);
-        ArrayList<String> favoriteCities;
+        ArrayList<String> cities = PreferencesHelper.loadFavoriteCities(preferences);
         int cityPosition = preferences.getInt("position", -1);
-            if (cities != null) {
-                favoriteCities = new ArrayList<>();
-                favoriteCities.addAll(cities);
+            if (cities.size() != 0) {
                 if (cityPosition != -1){
-                    mCity = favoriteCities.get(cityPosition);
+                    mCity = cities.get(cityPosition);
                     updateWeather(mCity);
                 } else {
-                    updateWeather(favoriteCities.get(favoriteCities.size() - 1));
+                    updateWeather(cities.get(cities.size() - 1));
                 }
             }
         return mView;
@@ -332,15 +329,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             case R.id.add_to_favorite_item:
                 SharedPreferences preferences = getContext().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
                 if (preferences != null) {
-                    HashSet<String> favorite_list = (HashSet<String>) preferences.getStringSet("cities", new HashSet<>());
+                    ArrayList<String> cities = PreferencesHelper.loadFavoriteCities(preferences);
                     if (mCity != null && !mCity.isEmpty()) {
-                        if (!favorite_list.add(mCity)) {
+                        if (cities.contains(mCity)) {
                             Snackbar.make(mView, getString(R.string.city_already_added), Toast.LENGTH_SHORT).show();
                         } else {
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.clear();
-                            editor.putStringSet("cities", favorite_list);
-                            editor.apply();
+                            cities.add(mCity);
+                            PreferencesHelper.saveFavoriteCities(cities, getActivity());
                             Snackbar.make(mView, getString(R.string.city_addition_message), Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -385,9 +380,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             Snackbar.make(mView.findViewById(R.id.root_fragment_weather), R.string.invalid_url, Snackbar.LENGTH_LONG).show();
             return;
         }
-
         URL hourlyUrl = createHourlyURL(city);
-
         if (hourlyUrl != null) {
             GetHourlyWeatherTask getHourlyWeatherTask = new GetHourlyWeatherTask();
             getHourlyWeatherTask.execute(hourlyUrl);
