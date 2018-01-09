@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -70,6 +72,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("resume", "onCreateView()");
         mView = inflater.inflate(R.layout.fragment_weather, container, false);
         Toolbar toolbar = mView.findViewById(R.id.toolbar);
         ((FragmentActivity) getActivity()).setSupportActionBar(toolbar);
@@ -108,8 +111,27 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 } else {
                     updateWeather(cities.get(cities.size() - 1));
                 }
+            } else {
+                if (mCity != null && !mCity.isEmpty()) {
+                    updateWeather(mCity);
+                }
             }
         return mView;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (mCity != null && !mCity.isEmpty()) {
+            outState.putString("city", mCity);
+        }
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            mCity = savedInstanceState.getString("city");
+        }
     }
 
     //создание URL веб-сервиса weatherbit.io для получения ежедневного прогноза погоды
@@ -393,6 +415,5 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mHourlyLinearTitle.setVisibility(View.VISIBLE);
         mCurrentCityTextView.setText(mCity);
         mTodayTextView.setText(R.string.today);
-
     }
 }

@@ -219,6 +219,9 @@ public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTo
             mFavoriteCityAdapter.removeItem(viewHolder.getAdapterPosition());
             //удаление города из preference
             SharedPreferences preferences = getActivity().getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
+            if (mFavoriteList.size() == 0) {
+                preferences.edit().remove("position").apply();
+            }
             if (preferences!= null) {
                 PreferencesHelper.saveFavoriteCities(mFavoriteList, getActivity());
             }
