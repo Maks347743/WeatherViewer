@@ -20,13 +20,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Set;
 
 
 public class Widget extends AppWidgetProvider {
 
     private Context mContext;
-    private RemoteViews widgetView;
+    private RemoteViews mWidgetView;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -47,11 +46,21 @@ public class Widget extends AppWidgetProvider {
                     updateWidget(cities.get(cities.size() - 1), context, appWidgetManager, preferences, id);
                 }
             }
+        } else {
+            city = preferences.getString("city", null);
+            for (int id : appWidgetIds) {
+                updateWidget(city, context, appWidgetManager, preferences, id);
+            }
         }
     }
 
     private void updateWidget(String city, Context context, AppWidgetManager appWidgetManager, SharedPreferences preferences, int widgetId) {
-        widgetView = new RemoteViews(mContext.getPackageName(), R.layout.layout_widget);
+        if (city == null) {
+            mWidgetView = new RemoteViews(mContext.getPackageName(), R.layout.layout_widget_empty);
+            appWidgetManager.updateAppWidget(widgetId, mWidgetView);
+            return;
+        }
+        mWidgetView = new RemoteViews(mContext.getPackageName(), R.layout.layout_widget);
         URL currentUrl = createCurrentURL(city);
         new LoadWidgetWeatherTask(appWidgetManager, widgetId).execute(currentUrl);
     }
@@ -115,9 +124,9 @@ public class Widget extends AppWidgetProvider {
                 String cityName = currentWeather.getString("city_name");
                 double temperature = currentWeather.getDouble("temp");
                 String iconCode = currentWeather.getJSONObject("weather").getString("icon");
-                widgetView.setTextViewText(R.id.widget_city_text_view, cityName);
-                widgetView.setTextViewText(R.id.widget_temperature_text_view, Utilities.getFormatTemperature(temperature));
-                mWidgetManager.updateAppWidget(mWidgetId, widgetView);
+                mWidgetView.setTextViewText(R.id.widget_city_text_view, cityName);
+                mWidgetView.setTextViewText(R.id.widget_temperature_text_view, Utilities.getFormatTemperature(temperature));
+                mWidgetManager.updateAppWidget(mWidgetId, mWidgetView);
                 URL iconUrl = new URL(String.format(mContext.getString(R.string.icon_service_url), iconCode));
                 new LoadWidgetWeatherImageTask(mWidgetManager, mWidgetId).execute(iconUrl);
             } catch (Exception e) {
@@ -162,8 +171,8 @@ public class Widget extends AppWidgetProvider {
         //назначить изображение погодных условий элементу recyclerView
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            widgetView.setImageViewBitmap(R.id.widget_icon_image_view, bitmap);
-            mWidgetManager.updateAppWidget(mWidgetId, widgetView);
+            mWidgetView.setImageViewBitmap(R.id.widget_icon_image_view, bitmap);
+            mWidgetManager.updateAppWidget(mWidgetId, mWidgetView);
         }
     }
 }
