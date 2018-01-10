@@ -17,12 +17,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,17 +32,19 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class FragmentFavorite extends Fragment implements FavoriteRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private ArrayList<String> mFavoriteList;
     private View mView;
     private RecyclerView mFavoriteRecyclerView;
     private FavoriteCityAdapter mFavoriteCityAdapter;
     private MenuItem mButtonMenuAdd;
     private String mCity;
+    EditText cityEditText;
 
     @Nullable
     @Override
@@ -78,7 +82,9 @@ public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTo
             case R.id.add_to_favorite_item:
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog.setTitle(R.string.add_to_favorite_text);
-                EditText cityEditText = new EditText(getActivity());
+                cityEditText = new EditText(getActivity());
+                cityEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+
                 dialog.setView(cityEditText);
                 dialog.setPositiveButton(android.R.string.ok, (dialogInterface, itemId) -> {
                     mCity = Utilities.getFormatCity(cityEditText.getText().toString());
@@ -182,7 +188,7 @@ public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTo
             HttpURLConnection connection = null;
             try {
                 String apiKey = getString(R.string.api_key);
-                URL checkCityUrl = new URL(String.format(getActivity().getString(R.string.current_web_service_url), cities[0], apiKey));
+                URL checkCityUrl = new URL(String.format(getActivity().getString(R.string.current_web_service_url),  URLEncoder.encode(cities[0], "UTF-8"), apiKey));
                 connection = (HttpURLConnection) checkCityUrl.openConnection();
                 int temp = connection.getResponseCode();
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
@@ -236,7 +242,6 @@ public class FavoriteFragment extends Fragment implements FavoriteRecyclerItemTo
             });
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
-
         }
     }
 }

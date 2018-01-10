@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,11 +24,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,10 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
     private static final String CITY_KEY = "city";
@@ -329,9 +322,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_weather, menu);
         mSearchView = (SearchView) menu.findItem(R.id.search_view).getActionView();
+        mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
         mSearchView.setQueryHint(getString(R.string.search_hint_text));
         mItemSearch = menu.findItem(R.id.search_view);
-        mSearchView.setInputType(InputType.TYPE_CLASS_TEXT);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setOnQueryTextListener(this);
         //анимация
@@ -362,9 +355,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
                 return true;
             case R.id.favorite_cities_item:
-                FavoriteFragment favoriteFragment = new FavoriteFragment();
+                FragmentFavorite fragmentFavorite = new FragmentFavorite();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_weather_container, favoriteFragment);
+                transaction.replace(R.id.fragment_weather_container, fragmentFavorite);
                 transaction.addToBackStack(null);
                 transaction.commit();
                 return true;

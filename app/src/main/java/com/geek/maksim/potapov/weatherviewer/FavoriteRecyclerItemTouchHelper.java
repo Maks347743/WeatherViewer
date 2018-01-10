@@ -21,7 +21,7 @@ public class FavoriteRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallb
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (viewHolder != null) {
-            final View foregroundView = ((FavoriteFragment.FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mViewForeground;
+            final View foregroundView = ((FragmentFavorite.FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mViewForeground;
             getDefaultUIUtil().onSelected(foregroundView);
         }
     }
@@ -30,14 +30,14 @@ public class FavoriteRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallb
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                 int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((FavoriteFragment.FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mViewForeground;
+        final View foregroundView = ((FragmentFavorite.FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mViewForeground;
         getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                 actionState, isCurrentlyActive);
     }
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        final View foregroundView = ((FavoriteFragment.FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mViewForeground;
+        final View foregroundView = ((FragmentFavorite.FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mViewForeground;
         getDefaultUIUtil().clearView(foregroundView);
     }
 
@@ -45,7 +45,7 @@ public class FavoriteRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallb
     public void onChildDraw(Canvas c, RecyclerView recyclerView,
                             RecyclerView.ViewHolder viewHolder, float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((FavoriteFragment.FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mViewForeground;
+        final View foregroundView = ((FragmentFavorite.FavoriteCityAdapter.FavoriteCityViewHolder) viewHolder).mViewForeground;
         getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                 actionState, isCurrentlyActive);
     }

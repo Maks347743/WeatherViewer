@@ -34,20 +34,17 @@ public class Widget extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         SharedPreferences preferences = context.getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
         String city;
-        Set<String> cities = preferences.getStringSet("cities", null);
-        ArrayList<String> favoriteCities;
+        ArrayList<String> cities = PreferencesHelper.loadFavoriteCities(preferences);
         int cityPosition = preferences.getInt("position", -1);
-        if (cities != null) {
-            favoriteCities = new ArrayList<>();
-            favoriteCities.addAll(cities);
+        if (cities.size() != 0) {
             if (cityPosition != -1) {
-                city = favoriteCities.get(cityPosition);
+                city = cities.get(cityPosition);
                 for (int id : appWidgetIds) {
                     updateWidget(city, context, appWidgetManager, preferences, id);
                 }
             } else {
                 for (int id : appWidgetIds) {
-                    updateWidget(favoriteCities.get(favoriteCities.size() - 1), context, appWidgetManager, preferences, id);
+                    updateWidget(cities.get(cities.size() - 1), context, appWidgetManager, preferences, id);
                 }
             }
         }
@@ -57,10 +54,6 @@ public class Widget extends AppWidgetProvider {
         widgetView = new RemoteViews(mContext.getPackageName(), R.layout.layout_widget);
         URL currentUrl = createCurrentURL(city);
         new LoadWidgetWeatherTask(appWidgetManager, widgetId).execute(currentUrl);
-        /*widgetView.setTextViewText(R.id.widget_city_text_view, cityName);
-        widgetView.setImageViewBitmap(R.id.widget_icon_image_view, bitmap);
-        widgetView.setTextViewText(R.id.widget_temperature_text_view, Utilities.getFormatTemperature(temperature));
-        appWidgetManager.updateAppWidget(id, widgetView);*/
     }
 
     private URL createCurrentURL(String city) {
