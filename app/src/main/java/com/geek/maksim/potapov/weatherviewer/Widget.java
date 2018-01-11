@@ -7,11 +7,10 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.RemoteViews;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +29,6 @@ public class Widget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         mContext = context;
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
         SharedPreferences preferences = context.getSharedPreferences(FragmentActivity.CITY_PREFERENCES, Context.MODE_PRIVATE);
         String city;
         ArrayList<String> cities = PreferencesHelper.loadFavoriteCities(preferences);
@@ -52,17 +50,21 @@ public class Widget extends AppWidgetProvider {
                 updateWidget(city, context, appWidgetManager, preferences, id);
             }
         }
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     private void updateWidget(String city, Context context, AppWidgetManager appWidgetManager, SharedPreferences preferences, int widgetId) {
-        if (city == null) {
-            mWidgetView = new RemoteViews(mContext.getPackageName(), R.layout.layout_widget_empty);
-            appWidgetManager.updateAppWidget(widgetId, mWidgetView);
-            return;
-        }
         mWidgetView = new RemoteViews(mContext.getPackageName(), R.layout.layout_widget);
-        URL currentUrl = createCurrentURL(city);
-        new LoadWidgetWeatherTask(appWidgetManager, widgetId).execute(currentUrl);
+        if (city == null) {
+            mWidgetView.setViewVisibility(R.id.widget_city_text_view, View.VISIBLE);
+            mWidgetView.setViewVisibility(R.id.widget_icon_image_view, View.GONE);
+            mWidgetView.setViewVisibility(R.id.widget_temperature_text_view, View.GONE);
+            mWidgetView.setTextViewText(R.id.widget_city_text_view, context.getString(R.string.empty_widget_data));
+            appWidgetManager.updateAppWidget(widgetId, mWidgetView);
+        } else {
+            URL currentUrl = createCurrentURL(city);
+            new LoadWidgetWeatherTask(appWidgetManager, widgetId).execute(currentUrl);
+        }
     }
 
     private URL createCurrentURL(String city) {
