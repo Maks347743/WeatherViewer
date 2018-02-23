@@ -1,10 +1,6 @@
 package com.geek.maksim.potapov.weatherviewer;
 
-import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 public class DailyWeather {
 

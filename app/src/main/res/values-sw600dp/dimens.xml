@@ -1,5 +1,6 @@
 <resources>
     <dimen name="content_margin">32dp</dimen>
+    <dimen name="ic_delete">60dp</dimen>
     <dimen name="image_side_length">60dp</dimen>
     <dimen name="current_city_text_view_size">80sp</dimen>
     <dimen name="current_temperature_text_view_size">160sp</dimen>
@@ -13,4 +14,9 @@
     <dimen name="progress_bar_side_length">40dp</dimen>
     <dimen name="hour_text_size">30sp</dimen>
     <dimen name="hourly_temperature_text_size">40sp</dimen>
+    <dimen name="widget_text_size">20sp</dimen>
+    <dimen name="swipe_delete_text_size">26sp</dimen>
+    <dimen name="favorite_city_text_size">60sp</dimen>
+    <dimen name="favorite_recycler_view_item_height_size">160dp</dimen>
+    <dimen name="favorite_recycler_view_inner_padding">20dp</dimen>
 </resources>

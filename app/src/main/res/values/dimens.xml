@@ -13,5 +13,9 @@
     <dimen name="hour_text_size">15sp</dimen>
     <dimen name="hourly_temperature_text_size">20sp</dimen>
     <dimen name="ic_delete">30dp</dimen>
-    <dimen name="padd_10">10dp</dimen>
+    <dimen name="favorite_recycler_view_inner_padding">10dp</dimen>
+    <dimen name="widget_text_size">20sp</dimen>
+    <dimen name="swipe_delete_text_size">13sp</dimen>
+    <dimen name="favorite_city_text_size">30sp</dimen>
+    <dimen name="favorite_recycler_view_item_height_size">80dp</dimen>
 </resources>

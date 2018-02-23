@@ -13,22 +13,22 @@
 
         <ImageView
             android:id="@+id/delete_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/ic_delete"
+            android:layout_height="@dimen/ic_delete"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/favorite_recycler_view_inner_padding"
             android:src="@drawable/ic_delete_sweep_white_24px" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/favorite_recycler_view_inner_padding"
             android:layout_toStartOf="@id/delete_icon"
             android:text="@string/delete"
             android:textColor="#fff"
-            android:textSize="26sp" />
+            android:textSize="@dimen/swipe_delete_text_size" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -36,13 +36,13 @@
         android:id="@+id/view_foreground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:padding="@dimen/favorite_recycler_view_inner_padding">
         <TextView
-            android:textSize="60sp"
+            android:textSize="@dimen/favorite_city_text_size"
             android:id="@+id/favorite_city_text_view"
             tools:text="Moscow"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="160dp"/>
+            android:layout_height="@dimen/favorite_recycler_view_item_height_size"/>
     </RelativeLayout>
 </FrameLayout>
